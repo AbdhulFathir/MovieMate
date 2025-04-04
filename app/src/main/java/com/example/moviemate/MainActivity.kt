@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import com.example.moviemate.db.Movie
+import com.example.moviemate.screens.AddMovies
 import com.example.moviemate.ui.theme.MovieMateTheme
 
 class MainActivity : ComponentActivity() {
@@ -59,8 +60,6 @@ class MainActivity : ComponentActivity() {
 
 
                         CustomButton(text = "Add Movies to DB") {
-//                            val intent = Intent(this@MainActivity, AddMovies::class.java)
-//                            startActivity(intent)
                             val movies = listOf(
                                 Movie(
                                     title = "The Shawshank Redemption",
@@ -124,7 +123,8 @@ class MainActivity : ComponentActivity() {
                                 )
                             )
                             viewModel.addTodoItems(movies)
-
+                            val intent = Intent(this@MainActivity, AddMovies::class.java)
+                            startActivity(intent)
                         }
                         Spacer(modifier = Modifier.height(16.dp))
 

@@ -1,4 +1,4 @@
-package com.example.moviemate
+package com.example.moviemate.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +29,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.moviemate.MovieVM
+import com.example.moviemate.R
 import com.example.moviemate.db.Movie
 import java.text.SimpleDateFormat
 import java.util.Locale
