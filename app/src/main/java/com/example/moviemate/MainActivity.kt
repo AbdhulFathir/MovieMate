@@ -27,6 +27,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import com.example.moviemate.db.Movie
 import com.example.moviemate.screens.AddMovies
+import com.example.moviemate.screens.SearchActors
+import com.example.moviemate.screens.SearchByTitle
+import com.example.moviemate.screens.SearchMovies
 import com.example.moviemate.ui.theme.MovieMateTheme
 
 class MainActivity : ComponentActivity() {
@@ -129,20 +132,20 @@ class MainActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(16.dp))
 
                         CustomButton(text = "Search for Movies") {
-//                            val intent = Intent(this@MainActivity, SearchMovies::class.java)
-//                            startActivity(intent)
+                            val intent = Intent(this@MainActivity, SearchMovies::class.java)
+                            startActivity(intent)
                         }
                         Spacer(modifier = Modifier.height(16.dp))
 
                         CustomButton(text = "Search for Actors") {
-//                            val intent = Intent(this@MainActivity, SearchActors::class.java)
-//                            startActivity(intent)
+                            val intent = Intent(this@MainActivity, SearchActors::class.java)
+                            startActivity(intent)
                         }
                         Spacer(modifier = Modifier.height(16.dp))
 
                         CustomButton(text = "Search by Title ") {
-//                            val intent = Intent(this@MainActivity, SearchByTitle::class.java)
-//                            startActivity(intent)
+                            val intent = Intent(this@MainActivity, SearchByTitle::class.java)
+                            startActivity(intent)
                         }
                     }
                 }
