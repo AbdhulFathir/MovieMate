@@ -18,7 +18,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
 import com.example.moviemate.CustomButton
+import com.example.moviemate.MovieVM
 import com.example.moviemate.R
 import com.example.moviemate.ui.theme.MovieMateTheme
 import com.example.moviemate.widgets.MovieDetail
@@ -33,6 +35,7 @@ import java.net.URL
 class SearchMovies : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel = ViewModelProvider(this)[MovieVM::class.java]
         setContent {
             MovieMateTheme  {
                 Surface(modifier = Modifier.fillMaxSize()) {
@@ -100,7 +103,20 @@ class SearchMovies : ComponentActivity() {
                         Spacer(modifier = Modifier.height(8.dp))
 
                         CustomButton(text = "Save Movie to DB") {
-                            // TODO: Save to Room
+                            movieDetail?.let { movie ->
+                                viewModel.addTodoItem(
+                                    title = movie.Title,
+                                    year = movie.Year,
+                                    rated = movie.Rated,
+                                    released = movie.Released,
+                                    runtime = movie.Runtime,
+                                    genre = movie.Genre,
+                                    director = movie.Director,
+                                    writer = movie.Writer,
+                                    actors = movie.Actors,
+                                    plot = movie.Plot
+                                )
+                            }
                         }
 
                         Spacer(modifier = Modifier.height(20.dp))
