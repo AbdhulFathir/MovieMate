@@ -34,8 +34,9 @@ class SearchActors : ComponentActivity() {
             MovieMateTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     var actorQuery by rememberSaveable { mutableStateOf("") }
+                    var actorValue by rememberSaveable { mutableStateOf("") }
                     val viewModel = ViewModelProvider(this)[MovieVM::class.java]
-                    val movieResults by viewModel.searchByActor(actorQuery).observeAsState(emptyList())
+                    val movieResults by viewModel.searchByActor(actorValue).observeAsState(emptyList())
 
                     Image(
                         painter = painterResource(id = R.drawable.bg_image),
@@ -74,23 +75,21 @@ class SearchActors : ComponentActivity() {
                             )
                         }
 
-
-
                         Text("Search Movies by Actor", fontSize = 20.sp)
                         Spacer(modifier = Modifier.height(16.dp))
 
                         OutlinedTextField(
                             value = actorQuery,
                             onValueChange = { actorQuery = it },
-                            label = { Text("Enter actor name") }
+                            label = { Text("Enter actor name") },
+                            modifier = Modifier.fillMaxWidth()
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-//                        CustomButton(text = "Search") {
-//                        }
+                        CustomButton(text = "Search", onClick = { actorValue = actorQuery })
 
-                        if(actorQuery.isNotEmpty()){
+                        if(actorValue.isNotEmpty()){
                             LazyColumn {
                                 items(movieResults) { movie ->
                                     MovieCard(movie = movie)
