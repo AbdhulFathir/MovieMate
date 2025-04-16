@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,9 +40,9 @@ class SearchMovies : ComponentActivity() {
         setContent {
             MovieMateTheme  {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    var movieTitle by remember { mutableStateOf("") }
+                    var movieTitle by rememberSaveable { mutableStateOf("") }
                     var movieDetail by remember { mutableStateOf<MovieDetail?>(null) }
-                    var isLoading by remember { mutableStateOf(false) }
+                    var isLoading by rememberSaveable { mutableStateOf(false) }
 
                     Image(
                         painter = painterResource(id = R.drawable.bg_image),
