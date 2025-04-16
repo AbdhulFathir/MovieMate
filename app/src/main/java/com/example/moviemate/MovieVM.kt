@@ -50,5 +50,9 @@ class MovieVM: ViewModel() {
         }
     }
 
-    // create your function to update with id and updated title
+    fun searchByActor(query: String): LiveData<List<Movie>> {
+        return movieDAO.searchByActor(query)
+    }
+
+
 }

@@ -6,10 +6,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -17,7 +20,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
 import com.example.moviemate.CustomButton
+import com.example.moviemate.MovieVM
 import com.example.moviemate.R
 import com.example.moviemate.ui.theme.MovieMateTheme
 
@@ -28,6 +33,9 @@ class SearchActors : ComponentActivity() {
             MovieMateTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     var actorQuery by remember { mutableStateOf("") }
+                    val viewModel = ViewModelProvider(this)[MovieVM::class.java]
+                    val movieResults by viewModel.searchByActor(actorQuery).observeAsState(emptyList())
+
                     Image(
                         painter = painterResource(id = R.drawable.bg_image),
                         contentDescription = "Background Image",
@@ -78,8 +86,15 @@ class SearchActors : ComponentActivity() {
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        CustomButton(text = "Search") {
-                            // TODO: Query Room DB for matching actor
+//                        CustomButton(text = "Search") {
+//                        }
+
+                        if(actorQuery.isNotEmpty()){
+                            LazyColumn {
+                                items(movieResults) { movie ->
+                                    MovieCard(movie = movie)
+                                }
+                            }
                         }
                     }
                 }

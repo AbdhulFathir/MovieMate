@@ -20,5 +20,7 @@ interface MovieDAO {
     @Query("Delete FROM movies where id = :id")
     fun deleteMovie(id: Int)
 
-    // create your function to update with id and updated title
+    @Query("SELECT * FROM movies WHERE LOWER(actors) LIKE '%' || LOWER(:query) || '%'")
+    fun searchByActor(query: String): LiveData<List<Movie>>
+
 }
