@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 @TypeConverters(Converter::class)
 abstract class MovieDB: RoomDatabase() {
     companion object {
-        const val NAME = "Todo-Database"
+        const val NAME = "Movie-Database"
     }
 
     abstract fun getMovieDAO(): MovieDAO
