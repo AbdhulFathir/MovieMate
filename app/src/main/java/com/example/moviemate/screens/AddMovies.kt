@@ -105,7 +105,7 @@ fun MovieCard(movie: Movie) {
             Text(text = "Genre: ${movie.genre}")
             Text(text = "Director: ${movie.director}")
             Text(text = "Actors: ${movie.actors}")
-            Text(text = "Plot: ${movie.plot}", maxLines = 3)
+            Text(text = "Plot: ${movie.plot}")
         }
     }
 }

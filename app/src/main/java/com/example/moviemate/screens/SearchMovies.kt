@@ -131,7 +131,7 @@ class SearchMovies : ComponentActivity() {
                                     .fillMaxWidth()
                                     .padding(8.dp),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = Color(0xFFBBDEFB) // Light Blue
+                                    containerColor = Color(0xFFBBDEFB)
                                 ),
                                 elevation = CardDefaults.cardElevation(4.dp)
                             ) {
