@@ -38,7 +38,7 @@ class SearchByTitle : ComponentActivity() {
         setContent {
             MovieMateTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    var movieTitle by remember { mutableStateOf("") }
+                    var movieTitle by rememberSaveable { mutableStateOf("") }
                     var isLoading by rememberSaveable { mutableStateOf(false) }
                     var results by remember { mutableStateOf<List<SimpleMovie>>(emptyList()) }
 
