@@ -126,7 +126,7 @@ class MainActivity : ComponentActivity() {
                                     plot = "When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence."
                                 )
                             )
-                            viewModel.addTodoItems(movies)
+                            viewModel.addMovies(movies)
                             val intent = Intent(this@MainActivity, AddMovies::class.java)
                             startActivity(intent)
                         }

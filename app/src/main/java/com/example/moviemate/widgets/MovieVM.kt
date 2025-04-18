@@ -12,16 +12,16 @@ class MovieVM: ViewModel() {
     private val movieDAO = MainApplication.database.getMovieDAO()
     val movies: LiveData<List<Movie>> = movieDAO.getAllMovies()
 
-    fun addTodoItem(title: String,
-                    year: String,
-                    rated: String,
-                    released: String,
-                    runtime: String,
-                    genre: String,
-                    director: String,
-                    writer: String,
-                    actors: String,
-                    plot: String,) {
+    fun addMovie(title: String,
+                 year: String,
+                 rated: String,
+                 released: String,
+                 runtime: String,
+                 genre: String,
+                 director: String,
+                 writer: String,
+                 actors: String,
+                 plot: String,) {
         viewModelScope.launch(Dispatchers.IO) {
             val item = Movie(
                 title = title,
@@ -39,15 +39,9 @@ class MovieVM: ViewModel() {
         }
     }
 
-    fun addTodoItems(movies: List<Movie>) {
+    fun addMovies(movies: List<Movie>) {
         viewModelScope.launch(Dispatchers.IO) {
             movieDAO.addMovies(movies)
-        }
-    }
-
-    fun deleteTodoItem(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            movieDAO.deleteMovie(id)
         }
     }
 

@@ -105,7 +105,7 @@ class SearchMovies : ComponentActivity() {
 
                         CustomButton(text = "Save Movie to DB") {
                             movieDetail?.let { movie ->
-                                viewModel.addTodoItem(
+                                viewModel.addMovie(
                                     title = movie.Title,
                                     year = movie.Year,
                                     rated = movie.Rated,
