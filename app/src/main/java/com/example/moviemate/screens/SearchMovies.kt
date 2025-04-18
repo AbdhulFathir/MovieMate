@@ -4,13 +4,13 @@ import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,30 +19,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModelProvider
 import com.example.moviemate.CustomButton
 import com.example.moviemate.widgets.MovieVM
 import com.example.moviemate.R
 import com.example.moviemate.ui.theme.MovieMateTheme
-import com.example.moviemate.widgets.MovieDetail
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.json.JSONObject
-import java.net.HttpURLConnection
-import java.net.URL
+import com.example.moviemate.widgets.SearchMoviesViewModel
 
 class SearchMovies : ComponentActivity() {
+
+    private val searchViewModel: SearchMoviesViewModel by viewModels()
+    private val databaseViewModel: MovieVM by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel = ViewModelProvider(this)[MovieVM::class.java]
         setContent {
             MovieMateTheme  {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    var movieTitle by rememberSaveable { mutableStateOf("") }
-                    var movieDetail by remember { mutableStateOf<MovieDetail?>(null) }
-                    var isLoading by rememberSaveable { mutableStateOf(false) }
+
+                    val movieTitle by searchViewModel.movieTitle.collectAsState()
+                    val isLoading by searchViewModel.isLoading.collectAsState()
+                    val movieDetail by searchViewModel.movieDetail.collectAsState()
 
                     Image(
                         painter = painterResource(id = R.drawable.bg_image),
@@ -87,25 +83,21 @@ class SearchMovies : ComponentActivity() {
 
                         OutlinedTextField(
                             value = movieTitle,
-                            onValueChange = { movieTitle = it },
+                            onValueChange = { searchViewModel.setMovieTitle(it) },
                             label = { Text("Enter movie title") }
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
 
                         CustomButton(text = "Retrieve Movie") {
-                            fetchMovieDetail(movieTitle, onResult = {
-                                movieDetail = it
-                            }, setLoading = {
-                                isLoading = it
-                            })
+                            searchViewModel.fetchMovieDetail()
                         }
 
                         Spacer(modifier = Modifier.height(8.dp))
 
                         CustomButton(text = "Save Movie to DB") {
                             movieDetail?.let { movie ->
-                                viewModel.addMovie(
+                                databaseViewModel.addMovie(
                                     title = movie.Title,
                                     year = movie.Year,
                                     rated = movie.Rated,
@@ -152,59 +144,6 @@ class SearchMovies : ComponentActivity() {
                     }
                 }
 
-            }
-        }
-    }
-}
-
-fun fetchMovieDetail(
-    title: String,
-    onResult: (MovieDetail?) -> Unit,
-    setLoading: (Boolean) -> Unit
-) {
-    CoroutineScope(Dispatchers.IO).launch {
-        setLoading(true)
-
-        try {
-            val url = URL("https://www.omdbapi.com/?t=${title}&apikey=779e8391")
-            val connection = url.openConnection() as HttpURLConnection
-            connection.requestMethod = "GET"
-            connection.connect()
-
-            val responseCode = connection.responseCode
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                val response = connection.inputStream.bufferedReader().readText()
-                val json = JSONObject(response)
-
-                if (json.getString("Response") == "True") {
-                    val movie = MovieDetail(
-                        Title = json.getString("Title"),
-                        Year = json.getString("Year"),
-                        Rated = json.getString("Rated"),
-                        Released = json.getString("Released"),
-                        Runtime = json.getString("Runtime"),
-                        Genre = json.getString("Genre"),
-                        Director = json.getString("Director"),
-                        Writer = json.getString("Writer"),
-                        Actors = json.getString("Actors"),
-                        Plot = json.getString("Plot")
-                    )
-
-                    withContext(Dispatchers.Main) {
-                        onResult(movie)
-                        setLoading(false)
-                    }
-                } else {
-                    withContext(Dispatchers.Main) {
-                        onResult(null)
-                        setLoading(false)
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                onResult(null)
-                setLoading(false)
             }
         }
     }
