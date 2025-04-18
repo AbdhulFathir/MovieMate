@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
-import com.example.moviemate.MovieVM
+import com.example.moviemate.widgets.MovieVM
 import com.example.moviemate.R
 import com.example.moviemate.db.Movie
 import com.example.moviemate.ui.theme.MovieMateTheme

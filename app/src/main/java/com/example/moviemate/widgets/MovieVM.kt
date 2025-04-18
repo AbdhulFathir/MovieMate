@@ -1,8 +1,9 @@
-package com.example.moviemate
+package com.example.moviemate.widgets
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.moviemate.MainApplication
 import com.example.moviemate.db.Movie
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

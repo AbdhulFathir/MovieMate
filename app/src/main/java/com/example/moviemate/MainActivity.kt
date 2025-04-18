@@ -31,6 +31,7 @@ import com.example.moviemate.screens.SearchActors
 import com.example.moviemate.screens.SearchByTitle
 import com.example.moviemate.screens.SearchMovies
 import com.example.moviemate.ui.theme.MovieMateTheme
+import com.example.moviemate.widgets.MovieVM
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
