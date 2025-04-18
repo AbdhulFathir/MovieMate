@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,23 +24,20 @@ import androidx.compose.ui.unit.sp
 import com.example.moviemate.CustomButton
 import com.example.moviemate.R
 import com.example.moviemate.ui.theme.MovieMateTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.json.JSONObject
-import java.net.HttpURLConnection
-import java.net.URL
+import com.example.moviemate.widgets.SearchByTitleViewModel
+
 
 class SearchByTitle : ComponentActivity() {
+    private val viewModel: SearchByTitleViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MovieMateTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    var movieTitle by rememberSaveable { mutableStateOf("") }
-                    var isLoading by rememberSaveable { mutableStateOf(false) }
-                    var results by remember { mutableStateOf<List<SimpleMovie>>(emptyList()) }
+                    val movieTitle by viewModel.movieTitle.collectAsState()
+                    val isLoading by viewModel.isLoading.collectAsState()
+                    val results by viewModel.results.collectAsState()
 
                     Image(
                         painter = painterResource(id = R.drawable.bg_image),
@@ -84,7 +81,7 @@ class SearchByTitle : ComponentActivity() {
 
                         OutlinedTextField(
                             value = movieTitle,
-                            onValueChange = { movieTitle = it },
+                            onValueChange = { viewModel.setMovieTitle(it) },
                             label = { Text("Enter movie title") },
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -93,12 +90,7 @@ class SearchByTitle : ComponentActivity() {
 
                         CustomButton(text = "Retrieve Movie") {
                             if (movieTitle.isNotBlank()) {
-                                isLoading = true
-                                fetchMovies(movieTitle, onResult = {
-                                    results = it
-                                }, setLoading = {
-                                    isLoading = it
-                                })
+                                viewModel.fetchMovies()
                             }
                         }
 
@@ -156,60 +148,6 @@ fun MovieCard(movie: SimpleMovie) {
     }
 }
 
-private fun fetchMovies(
-    title: String,
-    onResult: (List<SimpleMovie>) -> Unit,
-    setLoading: (Boolean) -> Unit
-) {
-    CoroutineScope(Dispatchers.IO).launch {
-        setLoading(true)
-
-        try {
-            val url = URL("https://www.omdbapi.com/?s=${title}&apikey=779e8391")
-            val connection = url.openConnection() as HttpURLConnection
-            connection.requestMethod = "GET"
-            connection.connect()
-
-            val responseCode = connection.responseCode
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                val response = connection.inputStream.bufferedReader().readText()
-                val json = JSONObject(response)
-                val movieList = mutableListOf<SimpleMovie>()
-
-                if (json.getString("Response") == "True") {
-                    val searchArray = json.getJSONArray("Search")
-                    for (i in 0 until searchArray.length()) {
-                        val item = searchArray.getJSONObject(i)
-                        movieList.add(
-                            SimpleMovie(
-                                title = item.getString("Title"),
-                                year = item.getString("Year"),
-                                imdbID = item.getString("imdbID"),
-                                type = item.getString("Type"),
-                                poster = item.getString("Poster")
-                            )
-                        )
-                    }
-
-                    withContext(Dispatchers.Main) {
-                        onResult(movieList)
-                        setLoading(false)
-                    }
-                } else {
-                    withContext(Dispatchers.Main) {
-                        onResult(emptyList())
-                        setLoading(false)
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                onResult(emptyList())
-                setLoading(false)
-            }
-        }
-    }
-}
 
 
 data class SimpleMovie(
