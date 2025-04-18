@@ -7,6 +7,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
@@ -39,6 +41,7 @@ class SearchMovies : ComponentActivity() {
                     val movieTitle by searchViewModel.movieTitle.collectAsState()
                     val isLoading by searchViewModel.isLoading.collectAsState()
                     val movieDetail by searchViewModel.movieDetail.collectAsState()
+                    val scrollState = rememberScrollState()
 
                     Image(
                         painter = painterResource(id = R.drawable.bg_image),
@@ -77,70 +80,77 @@ class SearchMovies : ComponentActivity() {
                             )
                         }
 
+                        Column(
+                            modifier = Modifier
+                                .verticalScroll(scrollState),
+                            verticalArrangement = Arrangement.Top,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text("Search Movie from OMDb API", fontSize = 20.sp)
+                            Spacer(modifier = Modifier.height(16.dp))
 
-                        Text("Search Movie from OMDb API", fontSize = 20.sp)
-                        Spacer(modifier = Modifier.height(16.dp))
+                            OutlinedTextField(
+                                value = movieTitle,
+                                onValueChange = { searchViewModel.setMovieTitle(it) },
+                                label = { Text("Enter movie title") }
+                            )
 
-                        OutlinedTextField(
-                            value = movieTitle,
-                            onValueChange = { searchViewModel.setMovieTitle(it) },
-                            label = { Text("Enter movie title") }
-                        )
+                            Spacer(modifier = Modifier.height(16.dp))
 
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        CustomButton(text = "Retrieve Movie") {
-                            searchViewModel.fetchMovieDetail()
-                        }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        CustomButton(text = "Save Movie to DB") {
-                            movieDetail?.let { movie ->
-                                databaseViewModel.addMovie(
-                                    title = movie.Title,
-                                    year = movie.Year,
-                                    rated = movie.Rated,
-                                    released = movie.Released,
-                                    runtime = movie.Runtime,
-                                    genre = movie.Genre,
-                                    director = movie.Director,
-                                    writer = movie.Writer,
-                                    actors = movie.Actors,
-                                    plot = movie.Plot
-                                )
+                            CustomButton(text = "Retrieve Movie") {
+                                searchViewModel.fetchMovieDetail()
                             }
-                        }
 
-                        Spacer(modifier = Modifier.height(20.dp))
+                            Spacer(modifier = Modifier.height(8.dp))
 
-                        if (isLoading) {
-                            CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp))
-                        }
-                        movieDetail?.let { movie ->
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color(0xFFBBDEFB)
-                                ),
-                                elevation = CardDefaults.cardElevation(4.dp)
-                            ) {
-                                Column(modifier = Modifier.padding(16.dp)) {
-                                    Text(text = movie.Title, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                                    Text(text = "Year: ${movie.Year}")
-                                    Text(text = "Rated: ${movie.Rated}")
-                                    Text(text = "Released: ${movie.Released}")
-                                    Text(text = "Runtime: ${movie.Runtime}")
-                                    Text(text = "Genre: ${movie.Genre}")
-                                    Text(text = "Director: ${movie.Director}")
-                                    Text(text = "Writer: ${movie.Writer}")
-                                    Text(text = "Actors: ${movie.Actors}")
-                                    Text(text = "Plot: ${movie.Plot}", maxLines = 3)
+                            CustomButton(text = "Save Movie to DB") {
+                                movieDetail?.let { movie ->
+                                    databaseViewModel.addMovie(
+                                        title = movie.Title,
+                                        year = movie.Year,
+                                        rated = movie.Rated,
+                                        released = movie.Released,
+                                        runtime = movie.Runtime,
+                                        genre = movie.Genre,
+                                        director = movie.Director,
+                                        writer = movie.Writer,
+                                        actors = movie.Actors,
+                                        plot = movie.Plot
+                                    )
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            if (isLoading) {
+                                CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp))
+                            }
+                            movieDetail?.let { movie ->
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp),
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = Color(0xFFBBDEFB)
+                                    ),
+                                    elevation = CardDefaults.cardElevation(4.dp)
+                                ) {
+                                    Column(modifier = Modifier.padding(16.dp)) {
+                                        Text(text = movie.Title, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                                        Text(text = "Year: ${movie.Year}")
+                                        Text(text = "Rated: ${movie.Rated}")
+                                        Text(text = "Released: ${movie.Released}")
+                                        Text(text = "Runtime: ${movie.Runtime}")
+                                        Text(text = "Genre: ${movie.Genre}")
+                                        Text(text = "Director: ${movie.Director}")
+                                        Text(text = "Writer: ${movie.Writer}")
+                                        Text(text = "Actors: ${movie.Actors}")
+                                        Text(text = "Plot: ${movie.Plot}", maxLines = 3)
+                                    }
                                 }
                             }
                         }
+
                     }
                 }
 
