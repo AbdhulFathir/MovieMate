@@ -76,6 +76,15 @@ class SearchByTitle : ComponentActivity() {
                             )
                         }
 
+                        Image(
+                            painter = painterResource(id = R.drawable.movie_mate_logo),
+                            contentDescription = "MovieMate Logo",
+                            modifier = Modifier
+                                .size(200.dp)
+                                .padding(vertical = 16.dp),
+                            contentScale = ContentScale.Fit
+                        )
+
                         Text("Search By Title", fontSize = 20.sp)
                         Spacer(modifier = Modifier.height(16.dp))
 
