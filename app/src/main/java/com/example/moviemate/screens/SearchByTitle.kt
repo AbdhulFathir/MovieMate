@@ -26,7 +26,6 @@ import com.example.moviemate.R
 import com.example.moviemate.ui.theme.MovieMateTheme
 import com.example.moviemate.widgets.SearchByTitleViewModel
 
-
 class SearchByTitle : ComponentActivity() {
     private val viewModel: SearchByTitleViewModel by viewModels()
 
@@ -75,15 +74,6 @@ class SearchByTitle : ComponentActivity() {
                                 modifier = Modifier.padding(start = 8.dp)
                             )
                         }
-
-                        Image(
-                            painter = painterResource(id = R.drawable.movie_mate_logo),
-                            contentDescription = "MovieMate Logo",
-                            modifier = Modifier
-                                .size(200.dp)
-                                .padding(vertical = 16.dp),
-                            contentScale = ContentScale.Fit
-                        )
 
                         Text("Search By Title", fontSize = 20.sp)
                         Spacer(modifier = Modifier.height(16.dp))
@@ -152,12 +142,9 @@ fun MovieCard(movie: SimpleMovie) {
             Text("Year: ${movie.year}")
             Text("Imdb ID : ${movie.imdbID}")
             Text("Type: ${movie.type}")
-//            Text("Plot: ${movie.Plot}")
         }
     }
 }
-
-
 
 data class SimpleMovie(
     val title: String,
